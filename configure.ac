@@ -91,7 +91,8 @@ AS_IF([test "x$have_blkid" = "xyes"],
 )
 
 # Checks for header files.
-AC_CHECK_HEADERS([linux/fs.h linux/blkzoned.h fcntl.h mntent.h stdlib.h string.h \
+AC_CHECK_HEADERS([stdbool.h \
+		linux/fs.h linux/blkzoned.h fcntl.h mntent.h stdlib.h string.h \
 		sys/ioctl.h sys/mount.h sys/sysmacros.h \
 		unistd.h linux/falloc.h byteswap.h])
 

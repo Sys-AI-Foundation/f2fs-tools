@@ -20,6 +20,11 @@
 #include <config.h>
 #endif
 
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L || \
+	defined(HAVE_STDBOOL_H)
+#include <stdbool.h>
+#endif
+
 #ifdef HAVE_LINUX_BLKZONED_H
 #include <linux/blkzoned.h>
 #endif
@@ -30,7 +35,10 @@ typedef u_int16_t	u16;
 typedef u_int8_t	u8;
 typedef u32		block_t;
 typedef u32		nid_t;
+#if !defined(__cplusplus) && !defined(bool) && \
+	!(defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L)
 typedef u8		bool;
+#endif
 typedef unsigned long	pgoff_t;
 typedef unsigned short	umode_t;
 
