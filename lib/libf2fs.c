@@ -8,6 +8,10 @@
  */
 #define _LARGEFILE64_SOURCE
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,6 +25,9 @@
 #include <sys/ioctl.h>
 #ifndef WITH_ANDROID
 #include <scsi/sg.h>
+#endif
+#ifdef HAVE_SYS_SYSMACROS_H
+#include <sys/sysmacros.h>
 #endif
 #include <linux/hdreg.h>
 #include <linux/limits.h>
@@ -520,6 +527,7 @@ __u32 f2fs_inode_chksum(struct f2fs_node *node)
  */
 const char *get_rootdev()
 {
+#ifdef HAVE_SYS_SYSMACROS_H
 	struct stat sb;
 	int fd, ret;
 	char buf[32];
@@ -560,6 +568,9 @@ const char *get_rootdev()
 	snprintf(rootdev, PATH_MAX + 1, "/dev/%s", buf);
 
 	return rootdev;
+#else
+	return NULL;
+#endif
 }
 
 /*
