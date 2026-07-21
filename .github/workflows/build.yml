@@ -1,0 +1,39 @@
+name: Build and Cross-Compile
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ubuntu-gcc:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@main
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y autoconf automake libtool pkg-config uuid-dev libselinux1-dev libblkid-dev
+    - name: Autogen
+      run: ./autogen.sh
+    - name: Configure
+      run: ./configure
+    - name: Build
+      run: make -j$(nproc)
+
+  ubuntu-clang:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@main
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y autoconf automake libtool pkg-config uuid-dev libselinux1-dev libblkid-dev
+    - name: Autogen
+      run: ./autogen.sh
+    - name: Configure
+      run: |
+        export CC=clang
+        ./configure
+    - name: Build
+      run: make -j$(nproc)
