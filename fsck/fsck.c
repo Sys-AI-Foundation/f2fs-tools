@@ -3262,8 +3262,10 @@ static inline void release_block(struct f2fs_sb_info *sbi, u64 blkaddr,
 		offset = OFFSET_IN_SEG(sbi, blkaddr);
 		se->valid_blocks--;
 		f2fs_clear_bit(offset, (char *)se->cur_valid_map);
-		if (need_fsync_data_record(sbi))
+		if (need_fsync_data_record(sbi)) {
 			f2fs_clear_bit(offset, (char *)se->ckpt_valid_map);
+			se->ckpt_valid_blocks--;
+		}
 		se->dirty = 1;
 		f2fs_clear_sit_bitmap(sbi, blkaddr);
 	}

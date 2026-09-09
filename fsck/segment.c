@@ -798,8 +798,10 @@ int update_block(struct f2fs_sb_info *sbi, void *buf, u32 *blkaddr,
 	}
 	se->valid_blocks--;
 	f2fs_clear_bit(offset, (char *)se->cur_valid_map);
-	if (need_fsync_data_record(sbi))
+	if (need_fsync_data_record(sbi)) {
 		f2fs_clear_bit(offset, (char *)se->ckpt_valid_map);
+		se->ckpt_valid_blocks--;
+	}
 	se->dirty = 1;
 	f2fs_clear_main_bitmap(sbi, old_blkaddr);
 	f2fs_clear_sit_bitmap(sbi, old_blkaddr);
@@ -821,8 +823,10 @@ int update_block(struct f2fs_sb_info *sbi, void *buf, u32 *blkaddr,
 	se->type = se->orig_type = type;
 	se->valid_blocks++;
 	f2fs_set_bit(offset, (char *)se->cur_valid_map);
-	if (need_fsync_data_record(sbi))
+	if (need_fsync_data_record(sbi)) {
 		f2fs_set_bit(offset, (char *)se->ckpt_valid_map);
+		se->ckpt_valid_blocks++;
+	}
 	se->dirty = 1;
 	f2fs_set_main_bitmap(sbi, new_blkaddr, type);
 	f2fs_set_sit_bitmap(sbi, new_blkaddr);
