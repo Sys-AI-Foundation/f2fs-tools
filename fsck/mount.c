@@ -3149,7 +3149,7 @@ next_segment:
 			continue;
 		}
 		if (!(get_sb(feature) & F2FS_FEATURE_RO) &&
-						IS_CUR_SEGNO(sbi, segno))
+			IS_CUR_SECNO(sbi, GET_SEC_FROM_SEG(sbi, segno)))
 			goto next_segment;
 		if (vblocks == 0 && not_enough)
 			goto next_segment;
