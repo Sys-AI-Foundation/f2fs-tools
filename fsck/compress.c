@@ -133,7 +133,7 @@ static bool ext_found(const char *ext)
 
 static const char *get_ext(const char *path)
 {
-	char *p = strrchr(path, '.');
+	const char *p = strrchr(path, '.');
 
 	return p == NULL ? path + strlen(path) : p + 1;
 }
