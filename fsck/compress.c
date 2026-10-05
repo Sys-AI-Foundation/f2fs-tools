@@ -30,7 +30,6 @@
 #define LZO_WORK_SIZE			ALIGN_UP(LZO1X_1_15_MEM_COMPRESS, 8)
 #endif
 #ifdef HAVE_LIBLZ4
-#define LZ4_MEMORY_USAGE		14
 #define LZ4_MAX_INPUT_SIZE		0x7E000000 /* 2 113 929 216 bytes */
 #define LZ4_MEM_COMPRESS		sizeof(LZ4_stream_t)
 #define LZ4_ACCELERATION_DEFAULT	1
