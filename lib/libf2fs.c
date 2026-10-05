@@ -499,10 +499,10 @@ f2fs_hash_t f2fs_dentry_hash(int encoding, int casefolded,
 	unsigned char *buff;
 
 	if (len && casefolded) {
-		buff = malloc(sizeof(char) * PATH_MAX);
+		buff = malloc(sizeof(char) * F2FS_NAME_LEN);
 		ASSERT(buff);
 
-		dlen = table->ops->casefold(table, name, len, buff, PATH_MAX);
+		dlen = table->ops->casefold(table, name, len, buff, F2FS_NAME_LEN);
 		if (dlen < 0) {
 			free(buff);
 			goto opaque_seq;
