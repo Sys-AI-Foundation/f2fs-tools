@@ -4096,6 +4096,10 @@ static int record_fsync_data(struct f2fs_sb_info *sbi)
 	if (!need_fsync_data_record(sbi))
 		return 0;
 
+	/* the kernel does not roll forward a checkpoint-disabled image */
+	if (is_set_ckpt_flags(F2FS_CKPT(sbi), CP_DISABLED_FLAG))
+		return 0;
+
 	ret = f2fs_find_fsync_inode(sbi, &inode_list);
 	if (ret)
 		goto out;
