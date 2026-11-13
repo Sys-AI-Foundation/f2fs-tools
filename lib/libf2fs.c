@@ -922,6 +922,14 @@ void get_kernel_uname_version(__u8 *version)
 #define BLKSSZGET	_IO(0x12,104)
 #endif
 
+#if defined(__linux__) && defined(_IOR) && !defined(BLKBSZGET)
+#define BLKBSZGET	_IOR(0x12,112, size_t)
+#endif
+
+#if defined(__linux__) && defined(_IOW) && !defined(BLKBSZSET)
+#define BLKBSZSET	_IOW(0x12,113, size_t)
+#endif
+
 #if defined(__APPLE__)
 #include <sys/disk.h>
 #define BLKGETSIZE	DKIOCGETBLOCKCOUNT
@@ -1046,6 +1054,34 @@ int get_device_info(int i)
 			MSG(0, "\tError: Using the default sector size\n");
 		else if (dev->sector_size < sector_size)
 			dev->sector_size = sector_size;
+#endif
+#if defined(BLKBSZGET) && defined(BLKBSZSET)
+		/*
+		 * The page cache of a block device is managed in units of its
+		 * soft block size, which can be as large as PAGE_SIZE. A
+		 * smaller write is then written back as a whole unit, which
+		 * moves the write pointer of a sequential zone beyond the
+		 * written data, and makes the next write in the same unit
+		 * fail. Use the logical block size for zoned devices, and do
+		 * not go on to write to the device if it cannot be set. The
+		 * soft block size is larger than the logical block size only
+		 * when PAGE_SIZE is, so leave it alone otherwise.
+		 */
+		if (dev->zoned_model == F2FS_ZONED_HM &&
+				c.func != DUMP && !c.dry_run &&
+				sysconf(_SC_PAGESIZE) > (long)dev->sector_size) {
+			int bsz = dev->sector_size;
+			int cur_bsz = 0;
+
+			if (ioctl(fd, BLKBSZSET, &bsz) < 0 &&
+			    (ioctl(fd, BLKBSZGET, &cur_bsz) < 0 ||
+			     cur_bsz > bsz)) {
+				MSG(0, "\tError: Cannot set the block size "
+					"of %s to %d\n", dev->path, bsz);
+				free(stat_buf);
+				return -1;
+			}
+		}
 #endif
 #ifdef BLKGETSIZE64
 		if (ioctl(fd, BLKGETSIZE64, &dev->total_sectors) < 0) {
