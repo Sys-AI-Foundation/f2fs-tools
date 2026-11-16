@@ -522,15 +522,16 @@ const char *get_rootdev()
 {
 	struct stat sb;
 	int fd, ret;
-	char buf[32];
-	char *uevent, *ptr;
+	char buf[PATH_MAX + 1];
+	char *uevent, *ptr, *end;
+	size_t len;
 
 	static char rootdev[PATH_MAX + 1];
 
 	if (stat("/", &sb) == -1)
 		return NULL;
 
-	snprintf(buf, 32, "/sys/dev/block/%u:%u/uevent",
+	snprintf(buf, sizeof(buf), "/sys/dev/block/%u:%u/uevent",
 		major(sb.st_dev), minor(sb.st_dev));
 
 	fd = open(buf, O_RDONLY);
@@ -547,19 +548,38 @@ const char *get_rootdev()
 	}
 
 	uevent = malloc(ret + 1);
-	uevent[ret] = '\0';
+	if (!uevent) {
+		close(fd);
+		return NULL;
+	}
 
 	ret = read(fd, uevent, ret);
 	close(fd);
-
-	ptr = strstr(uevent, "DEVNAME");
-	if (!ptr)
+	if (ret < 0) {
+		free(uevent);
 		return NULL;
+	}
+	uevent[ret] = '\0';
 
-	ret = sscanf(ptr, "DEVNAME=%s\n", buf);
-	snprintf(rootdev, PATH_MAX + 1, "/dev/%s", buf);
+	ptr = strstr(uevent, "DEVNAME=");
+	if (!ptr)
+		goto out_free;
 
+	ptr += strlen("DEVNAME=");
+	end = strchr(ptr, '\n');
+	len = end ? (size_t)(end - ptr) : strlen(ptr);
+	/* Leave room for the "/dev/" prefix and the terminating NUL. */
+	if (len == 0 || len + strlen("/dev/") > PATH_MAX)
+		goto out_free;
+
+	snprintf(rootdev, sizeof(rootdev), "/dev/%.*s", (int)len, ptr);
+
+	free(uevent);
 	return rootdev;
+
+out_free:
+	free(uevent);
+	return NULL;
 }
 
 /*
