@@ -634,7 +634,7 @@ fsck_again:
 			char ans[255] = {0};
 retry:
 			printf("Do you want to fix this partition? [Y/N] ");
-			ret = scanf("%s", ans);
+			ret = scanf("%254s", ans);
 			ASSERT(ret >= 0);
 			if (!strcasecmp(ans, "y"))
 				c.fix_on = 1;

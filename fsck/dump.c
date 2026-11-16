@@ -367,7 +367,7 @@ static void dump_file(struct f2fs_sb_info *sbi, struct node_info *ni,
 		goto dump;
 
 	printf("Do you want to dump this file into ./lost_found/? [Y/N] ");
-	ret = scanf("%s", ans);
+	ret = scanf("%254s", ans);
 	ASSERT(ret >= 0);
 
 	if (!strcasecmp(ans, "y")) {
