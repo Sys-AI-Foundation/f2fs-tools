@@ -2008,7 +2008,7 @@ int fsck_verify(struct f2fs_sb_info *sbi)
 		char ans[255] = {0};
 
 		printf("\nDo you want to restore lost files into ./lost_found/? [Y/N] ");
-		ret = scanf("%s", ans);
+		ret = scanf("%254s", ans);
 		ASSERT(ret >= 0);
 		if (!strcasecmp(ans, "y")) {
 			for (i = 0; i < fsck->nr_nat_entries; i++) {
