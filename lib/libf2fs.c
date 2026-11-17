@@ -124,7 +124,7 @@ int utf8_to_utf16(char *output, const char *input, size_t outsize,
 	const char *inp = input;
 	uint16_t *outp;
 	wchar_t wc;
-	uint16_t *volume_name = calloc(sizeof(uint16_t), MAX_VOLUME_NAME);
+	uint16_t *volume_name = calloc(MAX_VOLUME_NAME, sizeof(uint16_t));
 
 	if (!volume_name)
 		return -ENOMEM;
@@ -219,7 +219,7 @@ int utf16_to_utf8(char *output, const char *input, size_t outsize,
 	char *outp = output;
 	wchar_t wc;
 	uint16_t *inp;
-	uint16_t *volume_name = calloc(sizeof(uint16_t), MAX_VOLUME_NAME);
+	uint16_t *volume_name = calloc(MAX_VOLUME_NAME, sizeof(uint16_t));
 
 	if (!volume_name)
 		return -ENOMEM;

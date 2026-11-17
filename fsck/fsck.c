@@ -95,7 +95,7 @@ static int add_into_hard_link_list(struct f2fs_sb_info *sbi,
 	struct f2fs_fsck *fsck = F2FS_FSCK(sbi);
 	struct hard_link_node *node = NULL, *tmp = NULL, *prev = NULL;
 
-	node = calloc(sizeof(struct hard_link_node), 1);
+	node = calloc(1, sizeof(struct hard_link_node));
 	ASSERT(node != NULL);
 
 	node->nid = nid;
@@ -2119,7 +2119,7 @@ int fsck_chk_inline_dentries(struct f2fs_sb_info *sbi,
 	make_dentry_ptr(&d, node_blk, inline_dentry, 2);
 
 	fsck->dentry_depth++;
-	new_dentry = calloc(sizeof(struct f2fs_dentry), 1);
+	new_dentry = calloc(1, sizeof(struct f2fs_dentry));
 	ASSERT(new_dentry != NULL);
 
 	new_dentry->depth = fsck->dentry_depth;
@@ -2164,7 +2164,7 @@ int fsck_chk_dentry_blk(struct f2fs_sb_info *sbi, int casefolded, u32 blk_addr,
 	ASSERT(ret >= 0);
 
 	fsck->dentry_depth++;
-	new_dentry = calloc(sizeof(struct f2fs_dentry), 1);
+	new_dentry = calloc(1, sizeof(struct f2fs_dentry));
 	ASSERT(new_dentry != NULL);
 	new_dentry->depth = fsck->dentry_depth;
 	memcpy(new_dentry->name, child->p_name, F2FS_NAME_LEN);
@@ -2637,7 +2637,7 @@ void fsck_init(struct f2fs_sb_info *sbi)
 	ASSERT(tree_mark_size != 0);
 	tree_mark = calloc(tree_mark_size, 1);
 	ASSERT(tree_mark != NULL);
-	fsck->dentry = calloc(sizeof(struct f2fs_dentry), 1);
+	fsck->dentry = calloc(1, sizeof(struct f2fs_dentry));
 	ASSERT(fsck->dentry != NULL);
 	memcpy(fsck->dentry->name, "/", 1);
 	fsck->dentry_end = fsck->dentry;

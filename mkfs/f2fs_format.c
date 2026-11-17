@@ -757,7 +757,7 @@ static int f2fs_init_sit_area(void)
 	blk_size = 1 << get_sb(log_blocksize);
 	seg_size = (1 << get_sb(log_blocks_per_seg)) * blk_size;
 
-	zero_buf = calloc(sizeof(uint8_t), seg_size);
+	zero_buf = calloc(seg_size, sizeof(uint8_t));
 	if(zero_buf == NULL) {
 		MSG(1, "\tError: Calloc Failed for sit_zero_buf!!!\n");
 		return -1;
@@ -791,7 +791,7 @@ static int f2fs_init_nat_area(void)
 	blk_size = 1 << get_sb(log_blocksize);
 	seg_size = (1 << get_sb(log_blocks_per_seg)) * blk_size;
 
-	nat_buf = calloc(sizeof(uint8_t), seg_size);
+	nat_buf = calloc(seg_size, sizeof(uint8_t));
 	if (nat_buf == NULL) {
 		MSG(1, "\tError: Calloc Failed for nat_zero_blk!!!\n");
 		return -1;

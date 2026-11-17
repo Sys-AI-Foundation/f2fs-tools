@@ -3587,8 +3587,8 @@ void build_nat_area_bitmap(struct f2fs_sb_info *sbi)
 	fsck->nat_area_bitmap = calloc(fsck->nat_area_bitmap_sz, 1);
 	ASSERT(fsck->nat_area_bitmap);
 
-	fsck->entries = calloc(sizeof(struct f2fs_nat_entry),
-					fsck->nr_nat_entries);
+	fsck->entries = calloc(fsck->nr_nat_entries,
+					sizeof(struct f2fs_nat_entry));
 	ASSERT(fsck->entries);
 
 	for (block_off = 0; block_off < nr_nat_blks; block_off++) {
@@ -3763,7 +3763,7 @@ static struct fsync_inode_entry *add_fsync_inode(struct list_head *head,
 {
 	struct fsync_inode_entry *entry;
 
-	entry = calloc(sizeof(struct fsync_inode_entry), 1);
+	entry = calloc(1, sizeof(struct fsync_inode_entry));
 	if (!entry)
 		return NULL;
 	entry->ino = ino;
